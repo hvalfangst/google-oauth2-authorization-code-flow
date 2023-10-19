@@ -1,7 +1,8 @@
 # OAuth2-authorization-flow-using-Google
 
 ## Abstract
-This project implements an application that utilizes OAuth2 Authorization Code Flow with Google as the identity provider. The application provides a user-friendly way for users to log in with their Google accounts. Upon login, the application performs a callback to the back-channel, where the code associated with the callback response is exchanged for an access token. The token information is persisted to a database upon successful exchange. Additionally, the application includes dedicated endpoints for retrieving and deleting tokens.
+This project provides a basic example in which OAuth2 authorization code flow is being utilized in order to access Google resources on behalf of the user. 
+User and token information is persisted to DB upon successful authorization.
 
 
 ## Requirements
@@ -10,6 +11,7 @@ This project implements an application that utilizes OAuth2 Authorization Code F
 * Linux/Unix
 * [Golang](https://go.dev/)
 * [Docker](https://www.docker.com/products/docker-desktop/)
+* [Google account](https://accounts.google.com/signup/v2/createaccount?theme=glif&flowName=GlifWebSignIn&flowEntry=SignUp)
 
 
 ## OAuth2 Credentials
@@ -22,10 +24,21 @@ In order to get hold of Client ID and Secret, one must do the following:
 2. Click on the button with label 'CREATE CREDENTIALS'
 3. Choose option 'OAuth client ID'
 4. Choose option 'Web application'
-5. Under 'Authorized redirect URIs', add the following: 'localhost:8080/auth/google/callback'
+5. Add the following under 'Authorized redirect URIs': http://localhost:8080/auth/google/callback
 6. Click on the 'CREATE' button
 
-Now you can replace fields contained in file 'configuration.json' with your newly generated client ID and secret by act of copy pasta :)
+Now you can replace fields contained in file 'configuration.json' with your actual ID & Secret
+
+## Application Flow
+
+1. User visits the (static HTML) login page by accessing the following URL in the browser: http://localhost:8080
+2. User clicks on the "Login with Google" button, which redirects to http://localhost:8080/auth/google/login 
+3. The application initiates the OAuth2 Authorization Code Flow, redirecting users to Google's authentication page.
+4. Users log in to their Google accounts and authorize the application to access their Google account information.
+5. Upon successful authorization, Google sends an authorization code to the application's callback URL at http://localhost:8080/auth/google/callback
+6. The application exchanges the authorization code contained in callback response for an access token and other necessary credentials.
+7. The access token is used to make requests to Google's UserInfo API, which in this case retrieves email associated with user.
+8. The application persists a record containing the user's access token in DB.
 
 
 ## Startup
